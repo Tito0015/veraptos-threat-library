@@ -134,7 +134,6 @@ Heuristic linters pattern-match syntax. These rules encode **invariants**—flas
 
 Custom invariants lowered for your audit scope or private monorepo—Slither + Opengrep packs, CI-ready.
 
-**Contact:** [Email](mailto:you@example.com) · [DM on LinkedIn](https://linkedin.com/in/your-profile) · [DM on X](https://x.com/your-handle) · [Telegram](https://t.me/your-handle)
 
 ## License
 
