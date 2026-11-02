@@ -8,13 +8,14 @@ One page for the **showcase** ([veraptos-threat-library](https://github.com/Tito
 |---|---|
 | Opengrep packs + Slither detectors run on pinned DVD / annotated fixtures | Library CI + [`test-logs/summary.md`](test-logs/summary.md) (**11/11 PASS**) |
 | Opengrep rules match the engine’s **public rule format** (Semgrep/Opengrep YAML) | [`web2-opengrep/`](web2-opengrep/) |
+| **Verbatim** Python sink-map export (`--export-semgrep-python`) | [`web2-opengrep/_engine-output/veraptos.untrusted-external-interaction.yml`](web2-opengrep/_engine-output/veraptos.untrusted-external-interaction.yml) + [`PROVENANCE.md`](web2-opengrep/_engine-output/PROVENANCE.md) |
 | Slither detectors are **reference ports** of the same invariants, validated on **Slither 0.11.6** | [`web3-slither-dvd/`](web3-slither-dvd/) + [`.github/workflows/verify.yml`](.github/workflows/verify.yml) |
 | Sanitized harness logs (no local paths / secrets) | [`test-logs/*.log`](test-logs/) |
 
 ## Non-claims (do not infer from this page)
 
 - We do **not** claim the five Slither Python modules were **emitted by the Veraptos engine** — there is **no Slither exporter** in the product yet; they are hand-maintained ports run on real Slither.
-- We do **not** claim every Opengrep YAML here is a **verbatim engine export** unless a matching file appears under `web2-opengrep/_engine-output/` with a published diff (none today).
+- We do **not** claim the five showcase Opengrep YAML packs (GraphQL SSRF, etc.) are **verbatim engine exports** — only the file under [`web2-opengrep/_engine-output/`](web2-opengrep/_engine-output/) with a matching [`PROVENANCE.md`](web2-opengrep/_engine-output/PROVENANCE.md) entry.
 - We do **not** claim high precision/recall on arbitrary production repos — only TP/TN on the fixtures described in the README disclaimer.
 - **Found in the wild:** no responsibly disclosed production hit is published yet; this section is intentionally absent.
 
@@ -23,7 +24,7 @@ One page for the **showcase** ([veraptos-threat-library](https://github.com/Tito
 | Item | Status |
 |---|---|
 | DVD + annotated fixture harness | **Measured** (this repo) |
-| Raw engine export artifact + diff for a showcase pack | **Pending** (optional provenance folder) |
+| Raw engine export artifact + diff for a showcase pack | **Partial** — Python sink-map verbatim; GraphQL SSRF showcase diff vs engine export in [`01-graphql-ssrf/showcase-vs-engine-export.diff`](web2-opengrep/_engine-output/01-graphql-ssrf/showcase-vs-engine-export.diff) |
 | Independent third-party replication | **Pending** |
 
 ## Fixture honesty

@@ -16,10 +16,9 @@ These **10 showcase rules** encode **Veraptos threat invariants** as native Slit
 >
 > | Stack | What is in this repo | How it was produced |
 > |-------|----------------------|---------------------|
-> | **Opengrep (5 packs)** | YAML rules + co-located test files | Authored in the **same Semgrep/Opengrep rule format** the Veraptos engine uses for its web sink-map export. They are maintained here as showcase outputs (not a dump of closed-core compiler source). |
+> | **Opengrep (5 packs)** | YAML rules + co-located test files | **Showcase-authored** rules in the engine’s Semgrep/Opengrep YAML format (GraphQL SSRF, DOM XSS, FastAPI, Express, Go JWT). Regression proof is on the fixtures in each pack folder. |
+> | **Engine verbatim export** | [`web2-opengrep/_engine-output/`](web2-opengrep/_engine-output/) | **One** checked-in file today: [`veraptos.untrusted-external-interaction.yml`](web2-opengrep/_engine-output/veraptos.untrusted-external-interaction.yml) from `veraptos_static_cli --export-semgrep-python` (see [`PROVENANCE.md`](web2-opengrep/_engine-output/PROVENANCE.md)). **Not** the GraphQL SSRF pack — no TS/GraphQL exporter yet ([`01-graphql-ssrf/`](web2-opengrep/_engine-output/01-graphql-ssrf/)). |
 > | **Slither (5 detectors)** | Python plugin modules | **Hand-written reference ports** of the same invariants — there is **no dedicated Slither exporter yet**. We run them on a real **Slither 0.11.6** install (same as CI) against pinned DVD; that validates the invariant on Slither, not that the engine emitted these files. |
->
-> To claim a rule file is **verbatim engine output**, we would commit raw export artifacts and a diff under `web2-opengrep/_engine-output/` (none shipped yet).
 
 > **Architecture boundary**
 >

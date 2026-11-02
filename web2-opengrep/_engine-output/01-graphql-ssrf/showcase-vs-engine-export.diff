@@ -1,0 +1,35 @@
+﻿diff --git a/web2-opengrep/01-graphql-ssrf/graphql-ssrf.yaml b/web2-opengrep/_engine-output/veraptos.untrusted-external-interaction.yml
+index e83f78a..9b29566 100644
+--- a/web2-opengrep/01-graphql-ssrf/graphql-ssrf.yaml
++++ b/web2-opengrep/_engine-output/veraptos.untrusted-external-interaction.yml
+@@ -1,23 +1,9 @@
+ rules:
+-  - id: graphql-ssrf
+-    languages:
+-      - typescript
+-      - javascript
++  - id: veraptos.untrusted-external-interaction
++    languages: [python]
+     severity: ERROR
+-    message: GraphQL resolver argument flows into HTTP client without URL allowlist
+-    mode: taint
+-    pattern-sources:
+-      - pattern: args.$FIELD
+-    pattern-sinks:
+-      - pattern: fetch($URL)
+-      - pattern: axios.get($URL)
+-      - pattern: axios.post($URL, ...)
+-      - pattern: got($URL)
+-    pattern-sanitizers:
+-      - pattern: ALLOW.has($HOST)
+-      - pattern: $ALLOW.has($HOST)
+-      - pattern: args.$F.startsWith("https://api.example.com")
+-      - pattern: |
+-          if (!ALLOW.has(u.host)) throw ...
+-      - pattern: |
+-          if (args.url.startsWith("https://api.example.com")) { ... }
++    message: "untrusted external interaction"
++    pattern-either:
++      - pattern: requests.$M(...)
++      - pattern: httpx.$M(...)
++      - pattern: subprocess.$M(...)
