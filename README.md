@@ -138,3 +138,5 @@ Custom invariants lowered for your audit scope or private monorepo—Slither + O
 ## License
 
 **MIT License** — see [LICENSE](LICENSE). Rules in this repository are unencumbered for commercial integration in CI and audit tooling.
+
+**Evidence pack for reviewers:** [`EVIDENCE.md`](EVIDENCE.md) · held-out numbers in [**VeraptosBench-mini**](https://github.com/Tito0015/veraptosbench-mini).
