@@ -1,0 +1,16 @@
+rules:
+  - id: jwt-none-alg-go
+    languages:
+      - go
+    severity: ERROR
+    message: JWT parsed with keyfunc that does not enforce HMAC signing-method type
+    pattern: |
+      jwt.Parse($TOKEN, func($T *jwt.Token) (interface{}, error) {
+        return []byte("secret"), nil
+      })
+  - id: jwt-none-alg-go-parse-unverified
+    languages:
+      - go
+    severity: ERROR
+    message: jwt.ParseUnverified must not be used for authorization
+    pattern: jwt.ParseUnverified($TOKEN, $CLAIMS)

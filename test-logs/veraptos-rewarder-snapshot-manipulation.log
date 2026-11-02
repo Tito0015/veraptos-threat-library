@@ -1,0 +1,9 @@
+rule_id=veraptos-rewarder-snapshot-manipulation
+tool=slither
+detect=veraptos-rewarder-snapshot-manipulation
+dvd_contract=TheRewarderPool
+expected_dvd_hits>=1 actual_dvd_hits=1
+expected_safe_hits=0 actual_safe_hits=0
+cross_level_findings=0
+result=PASS
+sample=veraptos-rewarder-snapshot-manipulation

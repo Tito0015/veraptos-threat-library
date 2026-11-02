@@ -1,0 +1,8 @@
+rule_id=dom-xss-postmessage
+tool=opengrep
+expected_ruleid_lines=[7, 18]
+expected_ok_lines=[34, 39]
+matched_lines=[7, 18]
+missed=[]
+unexpected_ok_hits=[]
+result=PASS

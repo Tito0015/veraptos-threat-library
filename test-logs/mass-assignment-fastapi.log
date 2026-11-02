@@ -1,0 +1,8 @@
+rule_id=mass-assignment-fastapi
+tool=opengrep
+expected_ruleid_lines=[24, 29]
+expected_ok_lines=[39, 45]
+matched_lines=[24, 29]
+missed=[]
+unexpected_ok_hits=[]
+result=PASS

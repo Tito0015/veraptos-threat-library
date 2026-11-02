@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "veraptos-dvd-detectors"
+version = "0.1.0"
+description = "Veraptos Threat Library — Damn Vulnerable DeFi Slither detectors"
+requires-python = ">=3.10"
+dependencies = ["slither-analyzer>=0.10.0"]
+
+[project.entry-points."slither_analyzer.plugin"]
+veraptos_dvd = "veraptos_dvd:make_plugin"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["veraptos_dvd*"]

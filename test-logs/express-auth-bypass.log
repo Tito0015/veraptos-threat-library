@@ -1,0 +1,8 @@
+rule_id=express-auth-bypass
+tool=opengrep
+expected_ruleid_lines=[15, 21]
+expected_ok_lines=[26, 31]
+matched_lines=[15, 21]
+missed=[]
+unexpected_ok_hits=[]
+result=PASS

@@ -1,0 +1,18 @@
+rules:
+  - id: dom-xss-postmessage
+    languages:
+      - typescript
+      - javascript
+    severity: ERROR
+    message: postMessage payload rendered via dangerouslySetInnerHTML without origin check
+    mode: taint
+    pattern-sources:
+      - pattern: $EVENT.data
+    pattern-sinks:
+      - pattern: |
+          { __html: $HTML }
+    pattern-sanitizers:
+      - pattern: |
+          if ($EVENT.origin !== $EXPECTED) { ... }
+      - pattern: |
+          if ($EVENT.origin === $EXPECTED) { ... }

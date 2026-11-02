@@ -1,0 +1,9 @@
+rule_id=veraptos-side-entrance-state-hijack
+tool=slither
+detect=veraptos-side-entrance-state-hijack
+dvd_contract=SideEntranceLenderPool
+expected_dvd_hits>=1 actual_dvd_hits=1
+expected_safe_hits=0 actual_safe_hits=0
+cross_level_findings=0
+result=PASS
+sample=veraptos-side-entrance-state-hijack

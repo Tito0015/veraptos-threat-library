@@ -1,0 +1,16 @@
+rules:
+  - id: mass-assignment-fastapi
+    languages:
+      - python
+    severity: ERROR
+    message: Pydantic request body applied to ORM model without field allowlist
+    mode: taint
+    pattern-sources:
+      - pattern: $BODY.model_dump()
+      - pattern: $BODY.dict()
+    pattern-sinks:
+      - pattern: setattr($OBJ, $KEY, $VAL)
+      - pattern: $MODEL(**$DATA)
+    pattern-sanitizers:
+      - pattern: $BODY.model_dump(include=$ALLOW)
+      - pattern: $BODY.model_dump(exclude=$DENY)

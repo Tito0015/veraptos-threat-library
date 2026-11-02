@@ -1,0 +1,9 @@
+rule_id=veraptos-puppet-spot-oracle
+tool=slither
+detect=veraptos-puppet-spot-oracle
+dvd_contract=PuppetPool
+expected_dvd_hits>=1 actual_dvd_hits=1
+expected_safe_hits=0 actual_safe_hits=0
+cross_level_findings=0
+result=PASS
+sample=veraptos-puppet-spot-oracle

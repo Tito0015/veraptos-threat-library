@@ -1,0 +1,23 @@
+rules:
+  - id: graphql-ssrf
+    languages:
+      - typescript
+      - javascript
+    severity: ERROR
+    message: GraphQL resolver argument flows into HTTP client without URL allowlist
+    mode: taint
+    pattern-sources:
+      - pattern: args.$FIELD
+    pattern-sinks:
+      - pattern: fetch($URL)
+      - pattern: axios.get($URL)
+      - pattern: axios.post($URL, ...)
+      - pattern: got($URL)
+    pattern-sanitizers:
+      - pattern: ALLOW.has($HOST)
+      - pattern: $ALLOW.has($HOST)
+      - pattern: args.$F.startsWith("https://api.example.com")
+      - pattern: |
+          if (!ALLOW.has(u.host)) throw ...
+      - pattern: |
+          if (args.url.startsWith("https://api.example.com")) { ... }

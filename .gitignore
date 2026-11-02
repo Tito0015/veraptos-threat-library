@@ -1,0 +1,28 @@
+.env
+.targets/
+.tools/
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
+*.log.tmp
+/*.log
+
+# Virtual envs and Python packaging
+.venv/
+env/
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# Hardhat / Foundry / Solidity artifacts
+artifacts/
+cache/
+typechain/
+typechain-types/
+
+# IDE and OS
+.idea/
+.vscode/
+*.swp

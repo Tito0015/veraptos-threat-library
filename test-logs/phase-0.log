@@ -1,0 +1,6 @@
+phase=0
+slither=0.11.6
+opengrep=1.33.1
+dvd_tag=v3.0.0
+dvd_sha=33120e97e9dbe8c297496a99549e6408a3944e95
+harness=ready

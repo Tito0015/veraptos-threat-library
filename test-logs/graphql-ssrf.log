@@ -1,0 +1,8 @@
+rule_id=graphql-ssrf
+tool=opengrep
+expected_ruleid_lines=[7, 12]
+expected_ok_lines=[19, 25]
+matched_lines=[7, 12]
+missed=[]
+unexpected_ok_hits=[]
+result=PASS

@@ -1,0 +1,52 @@
+name: Verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install solc
+        run: |
+          pip install solc-select
+          solc-select install 0.8.16
+          solc-select use 0.8.16
+
+      - name: Install Slither plugin and analyzer
+        run: |
+          pip install -e web3-slither-dvd
+          pip install "slither-analyzer>=0.10.0"
+
+      - name: Clone and compile Damn Vulnerable DeFi v3.0.0
+        run: |
+          git clone --branch v3.0.0 --depth 1 https://github.com/theredguild/damn-vulnerable-defi.git .targets/damn-vulnerable-defi
+          cd .targets/damn-vulnerable-defi
+          npm install
+          npx hardhat compile
+
+      - name: Install Opengrep
+        run: |
+          mkdir -p .tools
+          curl -fsSL -o /tmp/opengrep.tgz \
+            https://github.com/opengrep/opengrep/releases/download/v1.33.1/opengrep-core_linux_x86.tar.gz
+          tar -xzf /tmp/opengrep.tgz -C .tools
+          mv .tools/opengrep-core .tools/opengrep
+          chmod +x .tools/opengrep
+          echo "OPENGREP_BIN=${{ github.workspace }}/.tools/opengrep" >> "$GITHUB_ENV"
+
+      - name: Run all rule tests
+        run: python scripts/run_tests.py --only all

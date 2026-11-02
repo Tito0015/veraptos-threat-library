@@ -1,0 +1,18 @@
+rules:
+  - id: express-auth-bypass
+    languages:
+      - typescript
+      - javascript
+    severity: ERROR
+    message: Sensitive Express route missing authentication middleware
+    pattern-either:
+      - patterns:
+          - pattern-inside: |
+              app.get($ROUTE, ($REQ, $RES) => { ... })
+          - pattern: UserModel.findById
+          - pattern-not: app.get($ROUTE, authMiddleware, ...)
+      - patterns:
+          - pattern-inside: |
+              app.delete($ROUTE, ($REQ, $RES) => { ... })
+          - pattern: $REQ.user
+          - pattern-not: app.delete($ROUTE, authMiddleware, ...)

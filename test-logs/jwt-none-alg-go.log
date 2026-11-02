@@ -1,0 +1,8 @@
+rule_id=jwt-none-alg-go
+tool=opengrep
+expected_ruleid_lines=[11, 18]
+expected_ok_lines=[27, 36]
+matched_lines=[11, 18]
+missed=[]
+unexpected_ok_hits=[]
+result=PASS
