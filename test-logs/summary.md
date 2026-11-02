@@ -23,4 +23,6 @@ pip install -e web3-slither-dvd
 python scripts/run_tests.py --only all
 ```
 
+**TP / TN meaning:** see [README § Disclaimer](../README.md#disclaimer-validation-scope-tp--tn). This summary only records harness PASS/FAIL on those fixtures—not production precision/recall.
+
 Per-rule logs: `test-logs/<rule-id>.log` (sanitized paths and hostnames).
