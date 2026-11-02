@@ -27,6 +27,10 @@ One page for the **showcase** ([veraptos-threat-library](https://github.com/Tito
 | Raw engine export artifact + diff for a showcase pack | **Partial** — Python sink-map verbatim; GraphQL SSRF showcase diff vs engine export in [`01-graphql-ssrf/showcase-vs-engine-export.diff`](web2-opengrep/_engine-output/01-graphql-ssrf/showcase-vs-engine-export.diff) |
 | Independent third-party replication | **Pending** |
 
+## VeraptosBench-mini cross-link (v0.1.2)
+
+Held-out scoring of these showcase rules lives in the public benchmark as a **control arm** (not a treatment claim). See [`veraptosbench-mini` README](https://github.com/Tito0015/veraptosbench-mini/blob/main/README.md) — status block, empty/trivial/shuffled controls on primary arms, and `bash scripts/reproduce.sh --verify-all` (includes `fixture_check.py`).
+
 ## Fixture honesty
 
 Opengrep test files and `ruleid` / `ok` line markers were **authored alongside** the rules to satisfy [`scripts/run_tests.py`](scripts/run_tests.py). They demonstrate the intended TP/TN contract for this repo, not an external benchmark corpus.

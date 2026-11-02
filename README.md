@@ -2,7 +2,7 @@
 
 ![Verify](https://github.com/Tito0015/veraptos-threat-library/actions/workflows/verify.yml/badge.svg)
 
-**Status:** Fixture proof on pinned Damn Vulnerable DeFi + annotated Opengrep tests (**11/11 PASS**, [`test-logs/summary.md`](test-logs/summary.md)). This repo does **not** report precision/recall on production code or on a broad advisory corpus — only the harness below. Advisory metadata for unrelated studies may cite the [GitHub Advisory Database](https://github.com/advisories) (CC-BY 4.0).
+**Status:** Fixture proof on pinned Damn Vulnerable DeFi + annotated Opengrep tests (**11/11 PASS**, [`test-logs/summary.md`](test-logs/summary.md)). This repo does **not** report precision/recall on production code or on a broad advisory corpus — only the harness below. The same rules are scored as an **out-of-class control** on frozen v1 advisories in [**VeraptosBench-mini**](https://github.com/Tito0015/veraptosbench-mini) **v0.1.2** (expect low recall; primary H2 bars were not met). Advisory metadata: [GitHub Advisory Database](https://github.com/advisories) (CC-BY 4.0).
 
 **Need custom invariants lowered for an upcoming audit or private codebase?** We deliver custom, high-precision Slither/Opengrep rule packs in **48 hours**.
 
