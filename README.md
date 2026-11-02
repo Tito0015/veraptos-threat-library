@@ -2,21 +2,30 @@
 
 ![Verify](https://github.com/Tito0015/veraptos-threat-library/actions/workflows/verify.yml/badge.svg)
 
-**Status:** Fixture proof on pinned Damn Vulnerable DeFi + annotated Opengrep tests (**11/11 PASS**, [`test-logs/summary.md`](test-logs/summary.md)). **Held-out evaluation** of these showcase rules on the frozen v1 advisory pairs is published in [**VeraptosBench-mini**](https://github.com/Tito0015/veraptosbench-mini) (out-of-class estimand; expect low recall). Benchmark sink-map + stock Slither baselines live in the same repo.
+**Status:** Fixture proof on pinned Damn Vulnerable DeFi + annotated Opengrep tests (**11/11 PASS**, [`test-logs/summary.md`](test-logs/summary.md)). This repo does **not** report precision/recall on production code or on a broad advisory corpus — only the harness below. Advisory metadata for unrelated studies may cite the [GitHub Advisory Database](https://github.com/advisories) (CC-BY 4.0).
 
 **Need custom invariants lowered for an upcoming audit or private codebase?** We deliver custom, high-precision Slither/Opengrep rule packs in **48 hours**.
 
-**Contact:** [Email](mailto:you@example.com) · [DM on LinkedIn](https://linkedin.com/in/your-profile) · [DM on X](https://x.com/your-handle) · [Telegram](https://t.me/your-handle)
+**Contact:** [Email](mailto:mhiritarek@gmail.com) · [LinkedIn](https://www.linkedin.com/in/tarek-mhiri/)
 
 ---
 
-These **10 showcase rules** are **invariant-shaped** Slither detectors and Opengrep YAMLs maintained in this repository and proven on DVD / annotated fixtures. They are **not** the same artifact as the VeraptosBench Opengrep row, which scores the compiler’s Python sink-map export (`veraptos_static_cli --export-semgrep-python` → `veraptos.untrusted-external-interaction`). The closed-core engine does **not** emit Slither detector modules today (`--export-slither` does not exist).
+These **10 showcase rules** encode **Veraptos threat invariants** as native Slither detectors and Opengrep YAML, with regression proof on DVD v3.0.0 and annotated fixtures in this repository.
+
+> **Provenance (two parts)**
+>
+> | Stack | What is in this repo | How it was produced |
+> |-------|----------------------|---------------------|
+> | **Opengrep (5 packs)** | YAML rules + co-located test files | Authored in the **same Semgrep/Opengrep rule format** the Veraptos engine uses for its web sink-map export. They are maintained here as showcase outputs (not a dump of closed-core compiler source). |
+> | **Slither (5 detectors)** | Python plugin modules | **Hand-written reference ports** of the same invariants — there is **no dedicated Slither exporter yet**. We run them on a real **Slither 0.11.6** install (same as CI) against pinned DVD; that validates the invariant on Slither, not that the engine emitted these files. |
+>
+> To claim a rule file is **verbatim engine output**, we would commit raw export artifacts and a diff under `web2-opengrep/_engine-output/` (none shipped yet).
 
 > **Architecture boundary**
 >
-> **Veraptos Engine** (proprietary / closed-core SaaS) **→ emits →** native, unencumbered rules (**open standard / [MIT](LICENSE)**).
+> **Veraptos Engine** (proprietary / closed-core SaaS) **→ emits →** Semgrep/Opengrep-class sink maps and related rule artifacts (**open standard / [MIT](LICENSE)** in this showcase).
 >
-> This repository contains **outputs only** (rules, invariants, tests). It does **not** include CPG lowering source, Z3 solver implementations, grammar definitions, or private backend ASTs.
+> **Slither detector modules** in this repo are **reference ports** until a Slither exporter ships. This repository contains **rules, invariants, and tests only** — not CPG lowering source, Z3 implementations, grammar definitions, or private backend ASTs.
 
 Built for bug bounty hunters, boutique audit firms, and enterprise AppSec teams who want **proof**, not slide decks.
 
@@ -36,7 +45,7 @@ Full verification (11 harness checks on pinned Damn Vulnerable DeFi v3.0.0):
 python scripts/run_tests.py --only all
 ```
 
-## Before → After (compiler-generated)
+## Before → After (invariant → native rule)
 
 | Invariant (Before) | Native rule (After) |
 |--------------------|------------------------|
@@ -62,7 +71,7 @@ flashLoan MUST NOT call target.functionCall(data)
   UNLESS target == address(token)
 ```
 
-**Generated Slither detector** (~63 lines): [`truster/detector.py`](web3-slither-dvd/veraptos_dvd/truster/detector.py) — `LibraryCall`/`LowLevelCall` + `is_dependent` on `target`.
+**Reference Slither detector** (~63 lines, hand-written port): [`truster/detector.py`](web3-slither-dvd/veraptos_dvd/truster/detector.py) — `LibraryCall`/`LowLevelCall` + `is_dependent` on `target`.
 
 **Harness (sanitized)**
 
@@ -76,9 +85,11 @@ result=PASS
 flowchart LR
   invariant[ThreatInvariant]
   engine[VeraptosEngine_ClosedCore]
-  rule[NativeSlitherOpengrepRule_MIT]
+  og[OpengrepYAML_MIT]
+  sl[SlitherReferencePort_MIT]
   ci[CIPipeline]
-  invariant --> engine --> rule --> ci
+  invariant --> engine --> og --> ci
+  invariant --> sl --> ci
 ```
 
 ## Contents and test evidence
@@ -122,21 +133,33 @@ The **11/11 PASS** badge and [`test-logs/`](test-logs/) mean each rule passed **
 
 **Not measured in this repo:** false positives in your app codebase, false negatives on obfuscated or framework-specific code paths, or coverage outside the small test files shipped here.
 
+Test files and `ruleid` / `ok` markers were **written alongside** the Opengrep rules to pass this harness; they are **not** an independent third-party benchmark.
+
+### Scope and limits (read before CI)
+
+Several rules are **narrow** and tuned to pass TP/TN on the fixtures here:
+
+- **Slither:** Rewarder / Selfie / Puppet logic keys on DVD **contract and function names** (e.g. `TheRewarderPool`, `SimpleGovernance`). Truster targets **`flashLoan` + user-controlled `target`** patterns from the Truster level.
+- **Opengrep:** Express rule looks for **`authMiddleware`** on sensitive routes; Go JWT rules include a **literal** `[]byte("secret")` keyfunc pattern; DOM-XSS sink is **`{ __html: ... }`**, not full React data-flow; GraphQL SSRF uses **intrafile taint** on small TypeScript snippets.
+
+A **TN** here means **zero findings on our paired safe fixture**, not proven precision on arbitrary code. Some safe paths pass because names or literals do not match the rule, not because the rule is generally sound.
+
 ### What you should do before production CI
 
-Run the rules on **your** trees, triage findings manually, and tune or fork rules for your stack. [`python scripts/run_tests.py --only all`](scripts/run_tests.py) only replays **our** TP/TN contract; it does not score precision/recall on a industry-wide corpus (see [**VeraptosBench-mini**](https://github.com/Tito0015/veraptosbench-mini) for a separate, pre-registered held-out estimand — different artifacts and pass criteria).
+Run the rules on **your** trees, triage findings manually, and tune or fork rules for your stack. [`python scripts/run_tests.py --only all`](scripts/run_tests.py) only replays **our** TP/TN contract; it does not score precision/recall on an industry-wide corpus.
 
 ## Why teams integrate this
 
-Heuristic linters pattern-match syntax. These rules encode **invariants**—flash-loan semantics, snapshot timing, spot oracles, SSRF taint, auth middleware presence, JWT alg binding. That is the difference between noise and fund-drain-class signal in CI.
+Heuristic linters pattern-match syntax. These rules encode **invariants**—flash-loan semantics, snapshot timing, spot oracles, SSRF taint, auth middleware presence, JWT alg binding—as **reference patterns** you can fork for CI, starting from DVD and annotated proofs in [`test-logs/`](test-logs/).
 
 ## Book a 48-hour rule sprint
 
 Custom invariants lowered for your audit scope or private monorepo—Slither + Opengrep packs, CI-ready.
 
+**Contact:** [Email](mailto:mhiritarek@gmail.com) · [LinkedIn](https://www.linkedin.com/in/tarek-mhiri/)
 
 ## License
 
 **MIT License** — see [LICENSE](LICENSE). Rules in this repository are unencumbered for commercial integration in CI and audit tooling.
 
-**Evidence pack for reviewers:** [`EVIDENCE.md`](EVIDENCE.md) · held-out numbers in [**VeraptosBench-mini**](https://github.com/Tito0015/veraptosbench-mini).
+**Evidence pack for reviewers:** [`EVIDENCE.md`](EVIDENCE.md).

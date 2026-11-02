@@ -1,50 +1,34 @@
 # Veraptos — evidence summary (accelerators & reviewers)
 
-One page linking the **showcase** ([veraptos-threat-library](https://github.com/Tito0015/veraptos-threat-library)) and the **held-out benchmark** ([veraptosbench-mini](https://github.com/Tito0015/veraptosbench-mini)).
+One page for the **showcase** ([veraptos-threat-library](https://github.com/Tito0015/veraptos-threat-library)): what is proven here and what is not.
 
 ## Claims (what we assert today)
 
 | Claim | Where it is shown |
 |---|---|
-| Showcase rules run on pinned DVD / annotated fixtures | Library CI + [`test-logs/summary.md`](test-logs/summary.md) (**11/11 PASS**) |
-| Frozen v1 advisory pairs + pre-registration | [`veraptosbench-mini/PREREG.md`](https://github.com/Tito0015/veraptosbench-mini/blob/main/PREREG.md) |
-| Compiler Python sink-map scored on v1 (Opengrep) | Benchmark README H2 **opengrep** row |
-| Stock Slither reentrancy baseline on v1 | Benchmark README H2 **slither** row |
-| Threat-library rules scored on same v1 pairs (out-of-class) | Benchmark README **H2 — threat library** table |
-| Offline harness integrity | `bash scripts/reproduce.sh --verify-all` in veraptosbench-mini |
+| Opengrep packs + Slither detectors run on pinned DVD / annotated fixtures | Library CI + [`test-logs/summary.md`](test-logs/summary.md) (**11/11 PASS**) |
+| Opengrep rules match the engine’s **public rule format** (Semgrep/Opengrep YAML) | [`web2-opengrep/`](web2-opengrep/) |
+| Slither detectors are **reference ports** of the same invariants, validated on **Slither 0.11.6** | [`web3-slither-dvd/`](web3-slither-dvd/) + [`.github/workflows/verify.yml`](.github/workflows/verify.yml) |
+| Sanitized harness logs (no local paths / secrets) | [`test-logs/*.log`](test-logs/) |
 
 ## Non-claims (do not infer from this page)
 
-- We do **not** claim the library DVD detectors were emitted by `veraptos_static` (`--export-slither` does not exist).
-- We do **not** claim high recall on v1 held-out pairs (N=7 Python / N=8 Solidity; classes mismatch showcase rules).
-- We do **not** claim LLM **pair recall** from H4 pass@k alone (held-out McNemar not measured).
+- We do **not** claim the five Slither Python modules were **emitted by the Veraptos engine** — there is **no Slither exporter** in the product yet; they are hand-maintained ports run on real Slither.
+- We do **not** claim every Opengrep YAML here is a **verbatim engine export** unless a matching file appears under `web2-opengrep/_engine-output/` with a published diff (none today).
+- We do **not** claim high precision/recall on arbitrary production repos — only TP/TN on the fixtures described in the README disclaimer.
 - **Found in the wild:** no responsibly disclosed production hit is published yet; this section is intentionally absent.
 
 ## What is measured vs pending
 
 | Item | Status |
 |---|---|
-| DVD + annotated fixture harness | **Measured** (library) |
-| Compiler sink-map + stock Slither on v1 | **Measured** (benchmark) |
-| Library rules on v1 (out-of-class) | **Measured** (benchmark) |
-| Empty / shuffled H2 controls | **Pending** on v1 primary rows |
-| Registry community rules (id + commit only) | **Pending** (PREREG addendum) |
-| CodeQL defaults on public clones | **Pending** |
-| LLM held-out pair recall | **Pending** |
-| Time-boxed expert hand-written rule | **Pending** |
+| DVD + annotated fixture harness | **Measured** (this repo) |
+| Raw engine export artifact + diff for a showcase pack | **Pending** (optional provenance folder) |
 | Independent third-party replication | **Pending** |
 
-## Upstream engineering (reference only)
+## Fixture honesty
 
-Joern dataflow fixes merged upstream: [joernio/joern#6472](https://github.com/joernio/joern/pull/6472), [joernio/joern#6473](https://github.com/joernio/joern/pull/6473). Not part of the benchmark scorecard.
-
-## 30-day milestones
-
-1. Publish empty + shuffled controls for v1 H2 primary arms.
-2. One registry Opengrep/Semgrep baseline (reference by commit, no vendored rules).
-3. One time-boxed expert rule per domain with pre-registered author/time cap.
-4. SARIF export example in CI (see below).
-5. First **found in the wild** entry when a real disclosed issue is cleared for publication.
+Opengrep test files and `ruleid` / `ok` line markers were **authored alongside** the rules to satisfy [`scripts/run_tests.py`](scripts/run_tests.py). They demonstrate the intended TP/TN contract for this repo, not an external benchmark corpus.
 
 ## CI snippet (Slither showcase detector)
 
@@ -55,15 +39,14 @@ Joern dataflow fixes merged upstream: [joernio/joern#6472](https://github.com/jo
 - run: slither contracts/YourContract.sol --detect veraptos-truster-arbitrary-call --fail-high
 ```
 
-## Opengrep + SARIF-shaped output
+## Opengrep JSON output
 
 Opengrep emits JSON; many pipelines accept SARIF via conversion. Minimal local scan:
 
 ```bash
 opengrep scan --config web2-opengrep/01-graphql-ssrf/graphql-ssrf.yaml --json src/ > findings.json
-# ponytail: add opengrep --sarif when your CLI version supports it; until then treat JSON as the audit artifact.
 ```
 
 ## License note
 
-Threat library rules: **MIT**. VeraptosBench-mini harness + data layout: **Apache-2.0**. Advisory metadata is sourced from public GHSA/GitHub; clone targets at scan time, not redistributed as full repos.
+Threat library rules: **MIT**. Advisory metadata from public sources is cited under each rule README where applicable; clone third-party targets at scan time, do not redistribute full upstream repos here.
